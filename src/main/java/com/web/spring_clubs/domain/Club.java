@@ -31,6 +31,8 @@ public class Club {
 
     @NotBlank
     private String stadium;
+
+    @OneToOne
     private Coach coach;
 
     @NotBlank
