@@ -22,7 +22,7 @@ public class CoachController {
         return new ResponseEntity<>(entities,HttpStatus.OK);
     }
 
-    @GetMapping(value = "{/id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> findCoachById(@PathVariable(value = "id") Long id) {
         Coach entity = service.findCoachById(id);
         return new ResponseEntity<>(entity, HttpStatus.OK);
