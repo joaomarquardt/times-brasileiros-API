@@ -18,4 +18,20 @@ public class Player extends Employee {
     @CollectionTable(name = "player_positions", joinColumns = @JoinColumn(name = "player_id"))
     @Column(name = "position")
     private List<String> positions;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<String> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<String> positions) {
+        this.positions = positions;
+    }
 }

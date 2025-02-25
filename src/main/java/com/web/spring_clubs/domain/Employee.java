@@ -33,4 +33,68 @@ public abstract class Employee {
     private double weight;
 
     private String photoUrl;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Club getCurrentClub() {
+        return currentClub;
+    }
+
+    public void setCurrentClub(Club currentClub) {
+        this.currentClub = currentClub;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public LocalDate getBornAt() {
+        return bornAt;
+    }
+
+    public void setBornAt(LocalDate bornAt) {
+        this.bornAt = bornAt;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }
