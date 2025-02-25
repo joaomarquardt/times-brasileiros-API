@@ -26,6 +26,10 @@ public abstract class Employee {
     @Past
     private LocalDate bornAt;
 
+    @NotNull
+    @Past
+    private LocalDate debutAt;
+
     @Positive
     private double height;
 
@@ -72,6 +76,14 @@ public abstract class Employee {
 
     public void setBornAt(LocalDate bornAt) {
         this.bornAt = bornAt;
+    }
+
+    public LocalDate getDebutAt() {
+        return debutAt;
+    }
+
+    public void setDebutAt(LocalDate debutAt) {
+        this.debutAt = debutAt;
     }
 
     public double getHeight() {
