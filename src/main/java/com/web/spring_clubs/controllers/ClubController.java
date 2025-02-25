@@ -22,7 +22,7 @@ public class ClubController {
         return new ResponseEntity<>(entities,HttpStatus.OK);
     }
 
-    @GetMapping(value = "{/id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> findClubById(@PathVariable(value = "id") Long id) {
         Club entity = service.findClubById(id);
         return new ResponseEntity<>(entity, HttpStatus.OK);
