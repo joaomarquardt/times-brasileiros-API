@@ -32,11 +32,8 @@ public class Club {
     @NotBlank
     private String stadium;
 
-    @OneToOne
-    private Coach coach;
-
     @NotBlank
-    private String logoUrl;
+    private String logoPath;
 
     public Long getId() {
         return id;
@@ -94,19 +91,11 @@ public class Club {
         this.stadium = stadium;
     }
 
-    public Coach getCoach() {
-        return coach;
+    public String getLogoPath() {
+        return logoPath;
     }
 
-    public void setCoach(Coach coach) {
-        this.coach = coach;
-    }
-
-    public String getLogoUrl() {
-        return logoUrl;
-    }
-
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+    public void setLogoPath(String logoPath) {
+        this.logoPath = logoPath;
     }
 }
