@@ -30,14 +30,16 @@ public class CoachService {
     public Coach updateCoach(Long id, Coach coach) {
         Coach entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Coach with ID " + id + " not found"));
         entity.setName(coach.getName());
+        entity.setTacticalStyle(coach.getTacticalStyle());
+        entity.setTrainingMethodology(coach.getTrainingMethodology());
         entity.setCurrentClub(coach.getCurrentClub());
         entity.setBornAt(coach.getBornAt());
         entity.setHeight(coach.getHeight());
         entity.setWeight(coach.getWeight());
-        entity.setNationality(coach.getNationality());
+        entity.setCountry(coach.getCountry());
         entity.setDebutAt(coach.getDebutAt());
         entity.setSalary(coach.getSalary());
-        entity.setPhotoUrl(coach.getPhotoUrl());
+        entity.setPhotoPath(coach.getPhotoPath());
 
         Coach updatedEntity = repository.save(entity);
         return updatedEntity;

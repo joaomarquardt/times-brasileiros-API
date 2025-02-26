@@ -35,11 +35,11 @@ public class PlayerService {
         entity.setBornAt(player.getBornAt());
         entity.setHeight(player.getHeight());
         entity.setWeight(player.getWeight());
-        entity.setNationality(player.getNationality());
+        entity.setCountry(player.getCountry());
         entity.setDebutAt(player.getDebutAt());
-        entity.setPositions(player.getPositions());
+        entity.setPosition(player.getPosition());
         entity.setSalary(player.getSalary());
-        entity.setPhotoUrl(player.getPhotoUrl());
+        entity.setPhotoPath(player.getPhotoPath());
 
         Player updatedEntity = repository.save(entity);
         return updatedEntity;
