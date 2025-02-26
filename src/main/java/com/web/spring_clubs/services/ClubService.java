@@ -35,7 +35,7 @@ public class ClubService {
         entity.setCity(club.getCity());
         entity.setFoundedAt(club.getFoundedAt());
         entity.setStadium(club.getStadium());
-        entity.setLogoUrl(club.getLogoUrl());
+        entity.setLogoPath(club.getLogoPath());
 
         Club updatedEntity = repository.save(entity);
         return updatedEntity;

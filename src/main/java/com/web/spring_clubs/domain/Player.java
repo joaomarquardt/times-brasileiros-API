@@ -10,16 +10,25 @@ import java.util.List;
 @Entity
 public class Player extends Employee {
     @NotEmpty
-    @ElementCollection
-    @CollectionTable(name = "player_positions", joinColumns = @JoinColumn(name = "player_id"))
-    @Column(name = "position")
-    private List<String> positions;
+    private String position;
 
-    public List<String> getPositions() {
-        return positions;
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club currentClub;
+
+    public String getPosition() {
+        return position;
     }
 
-    public void setPositions(List<String> positions) {
-        this.positions = positions;
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public Club getCurrentClub() {
+        return currentClub;
+    }
+
+    public void setCurrentClub(Club currentClub) {
+        this.currentClub = currentClub;
     }
 }

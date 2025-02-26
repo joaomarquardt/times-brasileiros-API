@@ -15,15 +15,11 @@ public abstract class Employee {
     @NotBlank
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club currentClub;
-
-    @Positive
+    @PositiveOrZero
     private double salary;
 
     @NotBlank
-    private String nationality;
+    private String country;
 
     @NotNull
     @Past
@@ -39,7 +35,7 @@ public abstract class Employee {
     @Positive
     private double weight;
 
-    private String photoUrl;
+    private String photoPath;
 
     public String getName() {
         return name;
@@ -47,14 +43,6 @@ public abstract class Employee {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Club getCurrentClub() {
-        return currentClub;
-    }
-
-    public void setCurrentClub(Club currentClub) {
-        this.currentClub = currentClub;
     }
 
     public double getSalary() {
@@ -65,12 +53,12 @@ public abstract class Employee {
         this.salary = salary;
     }
 
-    public String getNationality() {
-        return nationality;
+    public String getCountry() {
+        return country;
     }
 
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public LocalDate getBornAt() {
@@ -105,11 +93,11 @@ public abstract class Employee {
         this.weight = weight;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhotoPath() {
+        return photoPath;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 }
