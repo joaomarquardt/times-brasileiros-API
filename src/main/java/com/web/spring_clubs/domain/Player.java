@@ -4,6 +4,7 @@ package com.web.spring_clubs.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Table(name = "players")
@@ -15,6 +16,13 @@ public class Player extends Employee {
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club currentClub;
+
+    public Player(String name, double salary, String country, LocalDate bornAt, LocalDate debutAt,
+                  double height, double weight, String photoPath, String position, Club currentClub) {
+        super(name, salary, country, bornAt, debutAt, height, weight, photoPath);
+        this.position = position;
+        this.currentClub = currentClub;
+    }
 
     public String getPosition() {
         return position;

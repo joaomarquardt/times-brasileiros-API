@@ -37,6 +37,25 @@ public abstract class Employee {
 
     private String photoPath;
 
+    public Employee(String name, double salary, String country, LocalDate bornAt, LocalDate debutAt, double height, double weight, String photoPath) {
+        this.name = name;
+        this.salary = salary;
+        this.country = country;
+        this.bornAt = bornAt;
+        this.debutAt = debutAt;
+        this.height = height;
+        this.weight = weight;
+        this.photoPath = photoPath;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

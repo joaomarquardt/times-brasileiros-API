@@ -35,6 +35,17 @@ public class Club {
     @NotBlank
     private String logoPath;
 
+    public Club(Long id, String name, String surname, String state, String city, LocalDate foundedAt, String stadium, String logoPath) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.state = state;
+        this.city = city;
+        this.foundedAt = foundedAt;
+        this.stadium = stadium;
+        this.logoPath = logoPath;
+    }
+
     public Long getId() {
         return id;
     }
