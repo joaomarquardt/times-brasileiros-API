@@ -1,6 +1,7 @@
 package com.web.spring_clubs.controllers;
 
 import com.web.spring_clubs.domain.Coach;
+import com.web.spring_clubs.dtos.CoachDTO;
 import com.web.spring_clubs.services.CoachService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,27 +18,27 @@ public class CoachController {
     private CoachService service;
 
     @GetMapping
-    public ResponseEntity<List<Coach>> findAll() {
-        List<Coach> entities = service.findAll();
-        return new ResponseEntity<>(entities,HttpStatus.OK);
+    public ResponseEntity<List<CoachDTO>> findAll() {
+        List<CoachDTO> dtos = service.findAll();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findCoachById(@PathVariable(value = "id") Long id) {
-        Coach entity = service.findCoachById(id);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+        CoachDTO dto = service.findCoachById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> createCoach(@RequestBody Coach coach) {
-        Coach entity = service.createCoach(coach);
-        return new ResponseEntity<>(entity, HttpStatus.CREATED);
+    public ResponseEntity<?> createCoach(@RequestBody CoachDTO coachDTO) {
+        CoachDTO dto = service.createCoach(coachDTO);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateCoach(@PathVariable(value = "id") Long id, @RequestBody Coach coach) {
-        Coach entity = service.updateCoach(id, coach);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+    public ResponseEntity<?> updateCoach(@PathVariable(value = "id") Long id, @RequestBody CoachDTO coachDTO) {
+        CoachDTO dto = service.updateCoach(id, coachDTO);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
