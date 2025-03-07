@@ -1,7 +1,9 @@
 package com.web.spring_clubs.controllers;
 
 import com.web.spring_clubs.domain.Club;
+import com.web.spring_clubs.dtos.ClubDTO;
 import com.web.spring_clubs.services.ClubService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +19,27 @@ public class ClubController {
     private ClubService service;
 
     @GetMapping
-    public ResponseEntity<List<Club>> findAll() {
-        List<Club> entities = service.findAll();
-        return new ResponseEntity<>(entities,HttpStatus.OK);
+    public ResponseEntity<List<ClubDTO>> findAll() {
+        List<ClubDTO> dtos = service.findAll();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findClubById(@PathVariable(value = "id") Long id) {
-        Club entity = service.findClubById(id);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+        ClubDTO dto = service.findClubById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> createClub(@RequestBody Club club) {
-        Club entity = service.createClub(club);
-        return new ResponseEntity<>(entity, HttpStatus.CREATED);
+    public ResponseEntity<?> createClub(@Valid @RequestBody ClubDTO clubDTO) {
+        ClubDTO dto = service.createClub(clubDTO);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateClub(@PathVariable(value = "id") Long id, @RequestBody Club club) {
-        Club entity = service.updateClub(id, club);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+    public ResponseEntity<?> updateClub(@PathVariable(value = "id") Long id, @Valid @RequestBody ClubDTO clubDTO) {
+        ClubDTO dto = service.updateClub(id, clubDTO);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")

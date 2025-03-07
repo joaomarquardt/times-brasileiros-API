@@ -1,7 +1,9 @@
 package com.web.spring_clubs.controllers;
 
 import com.web.spring_clubs.domain.Player;
+import com.web.spring_clubs.dtos.PlayerDTO;
 import com.web.spring_clubs.services.PlayerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +20,27 @@ public class PlayerController {
     private PlayerService service;
 
     @GetMapping
-    public ResponseEntity<List<Player>> findAll() {
-        List<Player> entities = service.findAll();
-        return new ResponseEntity<>(entities,HttpStatus.OK);
+    public ResponseEntity<List<PlayerDTO>> findAll() {
+        List<PlayerDTO> dtos = service.findAll();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findPlayerById(@PathVariable(value = "id") Long id) {
-        Player entity = service.findPlayerById(id);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+        PlayerDTO dto = service.findPlayerById(id);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> createPlayer(@RequestBody Player player) {
-        Player entity = service.createPlayer(player);
-        return new ResponseEntity<>(entity, HttpStatus.CREATED);
+    public ResponseEntity<?> createPlayer(@Valid @RequestBody PlayerDTO playerDTO) {
+        PlayerDTO dto = service.createPlayer(playerDTO);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updatePlayer(@PathVariable(value = "id") Long id, @RequestBody Player player) {
-        Player entity = service.updatePlayer(id, player);
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+    public ResponseEntity<?> updatePlayer(@PathVariable(value = "id") Long id, @Valid @RequestBody PlayerDTO playerDTO) {
+        PlayerDTO dto = service.updatePlayer(id, playerDTO);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
