@@ -37,8 +37,7 @@ public class Club {
     @NotBlank
     private String logoPath;
 
-    public Club(Long id, String name, String surname, String state, String city, LocalDate foundedAt, String stadium, String logoPath) {
-        this.id = id;
+    public Club(String name, String surname, String state, String city, LocalDate foundedAt, String stadium, String logoPath) {
         this.name = name;
         this.surname = surname;
         this.state = state;
