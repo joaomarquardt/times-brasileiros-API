@@ -18,7 +18,7 @@ public class Coach extends Employee {
     private String trainingMethodology;
 
     @OneToOne
-    @JoinColumn(name = "club_id")
+    @JoinColumn(name = "current_club_id")
     private Club currentClub;
 
     public Coach(String name, double salary, String country, LocalDate bornAt, LocalDate debutAt, double height, double weight, String photoPath,
