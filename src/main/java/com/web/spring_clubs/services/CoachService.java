@@ -1,6 +1,8 @@
 package com.web.spring_clubs.services;
 
 import com.web.spring_clubs.domain.Coach;
+import com.web.spring_clubs.dtos.CoachDTO;
+import com.web.spring_clubs.mappers.CoachMapper;
 import com.web.spring_clubs.repositories.CoachRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,35 +16,28 @@ public class CoachService {
     @Autowired
     private CoachRepository repository;
 
-    public List<Coach> findAll() {
-        return repository.findAll();
+    @Autowired
+    private CoachMapper mapper;
+
+    public List<CoachDTO> findAll() {
+        return mapper.toDTOList(repository.findAll());
     }
 
-    public Coach findCoachById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Coach with ID" + id + " not found"));
+    public CoachDTO findCoachById(Long id) {
+        Coach entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Coach with ID" + id + " not found"));
+        return mapper.toDTO(entity);
     }
 
-    public Coach createCoach(Coach coach) {
-        Coach createdEntity = repository.save(coach);
-        return createdEntity;
+    public CoachDTO createCoach(CoachDTO coachDTO) {
+        Coach createdEntity = repository.save(mapper.toEntity(coachDTO));
+        return mapper.toDTO(createdEntity);
     }
 
-    public Coach updateCoach(Long id, Coach coach) {
+    public CoachDTO updateCoach(Long id, CoachDTO coachDTO) {
         Coach entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Coach with ID " + id + " not found"));
-        entity.setName(coach.getName());
-        entity.setTacticalStyle(coach.getTacticalStyle());
-        entity.setTrainingMethodology(coach.getTrainingMethodology());
-        entity.setCurrentClub(coach.getCurrentClub());
-        entity.setBornAt(coach.getBornAt());
-        entity.setHeight(coach.getHeight());
-        entity.setWeight(coach.getWeight());
-        entity.setCountry(coach.getCountry());
-        entity.setDebutAt(coach.getDebutAt());
-        entity.setSalary(coach.getSalary());
-        entity.setPhotoPath(coach.getPhotoPath());
-
-        Coach updatedEntity = repository.save(entity);
-        return updatedEntity;
+        mapper.updateEntityFromDTO(coachDTO, entity);
+        entity = repository.save(entity);
+        return mapper.toDTO(entity);
     }
 
     public void deleteCoach(Long id) {

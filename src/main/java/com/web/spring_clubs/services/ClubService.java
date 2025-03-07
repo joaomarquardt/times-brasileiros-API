@@ -1,6 +1,8 @@
 package com.web.spring_clubs.services;
 
 import com.web.spring_clubs.domain.Club;
+import com.web.spring_clubs.dtos.ClubDTO;
+import com.web.spring_clubs.mappers.ClubMapper;
 import com.web.spring_clubs.repositories.ClubRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +16,28 @@ public class ClubService {
     @Autowired
     private ClubRepository repository;
 
-    public List<Club> findAll() {
-        return repository.findAll();
+    @Autowired
+    private ClubMapper mapper;
+
+    public List<ClubDTO> findAll() {
+        return mapper.toDTOList(repository.findAll());
     }
 
-    public Club findClubById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Club with ID" + id + " not found"));
+    public ClubDTO findClubById(Long id) {
+        Club entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Club with ID" + id + " not found"));
+        return mapper.toDTO(entity);
     }
 
-    public Club createClub(Club club) {
-        Club createdEntity = repository.save(club);
-        return createdEntity;
+    public ClubDTO createClub(ClubDTO clubDTO) {
+        Club createdEntity = repository.save(mapper.toEntity(clubDTO));
+        return mapper.toDTO(createdEntity);
     }
 
-    public Club updateClub(Long id, Club club) {
+    public ClubDTO updateClub(Long id, ClubDTO clubDTO) {
         Club entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Club with ID " + id + " not found"));
-        entity.setName(club.getName());
-        entity.setSurname(club.getSurname());
-        entity.setState(club.getState());
-        entity.setCity(club.getCity());
-        entity.setFoundedAt(club.getFoundedAt());
-        entity.setStadium(club.getStadium());
-        entity.setLogoPath(club.getLogoPath());
-
-        Club updatedEntity = repository.save(entity);
-        return updatedEntity;
+        mapper.updateEntityFromDTO(clubDTO, entity);
+        entity = repository.save(entity);
+        return mapper.toDTO(entity);
     }
 
     public void deleteClub(Long id) {

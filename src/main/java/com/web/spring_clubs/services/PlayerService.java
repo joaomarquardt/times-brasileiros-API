@@ -1,6 +1,8 @@
 package com.web.spring_clubs.services;
 
 import com.web.spring_clubs.domain.Player;
+import com.web.spring_clubs.dtos.PlayerDTO;
+import com.web.spring_clubs.mappers.PlayerMapper;
 import com.web.spring_clubs.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +16,28 @@ public class PlayerService {
     @Autowired
     private PlayerRepository repository;
 
-    public List<Player> findAll() {
-        return repository.findAll();
+    @Autowired
+    private PlayerMapper mapper;
+
+    public List<PlayerDTO> findAll() {
+        return mapper.toDTOList(repository.findAll());
     }
 
-    public Player findPlayerById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player with ID" + id + " not found"));
+    public PlayerDTO findPlayerById(Long id) {
+        Player entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player with ID" + id + " not found"));
+        return mapper.toDTO(entity);
     }
 
-    public Player createPlayer(Player player) {
-        Player createdEntity = repository.save(player);
-        return createdEntity;
+    public PlayerDTO createPlayer(PlayerDTO playerDTO) {
+        Player createdEntity = repository.save(mapper.toEntity(playerDTO));
+        return mapper.toDTO(createdEntity);
     }
 
-    public Player updatePlayer(Long id, Player player) {
+    public PlayerDTO updatePlayer(Long id, PlayerDTO playerDTO) {
         Player entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player with ID " + id + " not found"));
-        entity.setName(player.getName());
-        entity.setCurrentClub(player.getCurrentClub());
-        entity.setBornAt(player.getBornAt());
-        entity.setHeight(player.getHeight());
-        entity.setWeight(player.getWeight());
-        entity.setCountry(player.getCountry());
-        entity.setDebutAt(player.getDebutAt());
-        entity.setPosition(player.getPosition());
-        entity.setSalary(player.getSalary());
-        entity.setPhotoPath(player.getPhotoPath());
-
-        Player updatedEntity = repository.save(entity);
-        return updatedEntity;
+        mapper.updateEntityFromDTO(playerDTO, entity);
+        entity = repository.save(entity);
+        return mapper.toDTO(entity);
     }
 
     public void deletePlayer(Long id) {
