@@ -4,11 +4,13 @@ package com.web.spring_clubs.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Table(name = "clubs")
 @Entity
+@NoArgsConstructor
 public class Club {
 
     @Id

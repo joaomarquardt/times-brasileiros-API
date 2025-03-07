@@ -3,12 +3,14 @@ package com.web.spring_clubs.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Table(name = "players")
 @Entity
+@NoArgsConstructor
 public class Player extends Employee {
     @NotEmpty
     private String position;

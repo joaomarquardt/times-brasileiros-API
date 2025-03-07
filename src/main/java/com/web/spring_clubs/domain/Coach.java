@@ -3,11 +3,13 @@ package com.web.spring_clubs.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Table(name = "coaches")
 @Entity
+@NoArgsConstructor
 public class Coach extends Employee {
     @NotBlank
     private String tacticalStyle;

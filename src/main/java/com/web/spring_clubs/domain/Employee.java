@@ -3,10 +3,12 @@ package com.web.spring_clubs.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @MappedSuperclass
+@NoArgsConstructor
 public abstract class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
