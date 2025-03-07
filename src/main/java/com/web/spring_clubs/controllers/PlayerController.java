@@ -3,6 +3,7 @@ package com.web.spring_clubs.controllers;
 import com.web.spring_clubs.domain.Player;
 import com.web.spring_clubs.dtos.PlayerDTO;
 import com.web.spring_clubs.services.PlayerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,13 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPlayer(@RequestBody PlayerDTO playerDTO) {
+    public ResponseEntity<?> createPlayer(@Valid @RequestBody PlayerDTO playerDTO) {
         PlayerDTO dto = service.createPlayer(playerDTO);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updatePlayer(@PathVariable(value = "id") Long id, @RequestBody PlayerDTO playerDTO) {
+    public ResponseEntity<?> updatePlayer(@PathVariable(value = "id") Long id, @Valid @RequestBody PlayerDTO playerDTO) {
         PlayerDTO dto = service.updatePlayer(id, playerDTO);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

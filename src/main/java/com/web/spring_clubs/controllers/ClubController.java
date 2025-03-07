@@ -3,6 +3,7 @@ package com.web.spring_clubs.controllers;
 import com.web.spring_clubs.domain.Club;
 import com.web.spring_clubs.dtos.ClubDTO;
 import com.web.spring_clubs.services.ClubService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +31,13 @@ public class ClubController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createClub(@RequestBody ClubDTO clubDTO) {
+    public ResponseEntity<?> createClub(@Valid @RequestBody ClubDTO clubDTO) {
         ClubDTO dto = service.createClub(clubDTO);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateClub(@PathVariable(value = "id") Long id, @RequestBody ClubDTO clubDTO) {
+    public ResponseEntity<?> updateClub(@PathVariable(value = "id") Long id, @Valid @RequestBody ClubDTO clubDTO) {
         ClubDTO dto = service.updateClub(id, clubDTO);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

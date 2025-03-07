@@ -3,6 +3,7 @@ package com.web.spring_clubs.controllers;
 import com.web.spring_clubs.domain.Coach;
 import com.web.spring_clubs.dtos.CoachDTO;
 import com.web.spring_clubs.services.CoachService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +31,13 @@ public class CoachController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCoach(@RequestBody CoachDTO coachDTO) {
+    public ResponseEntity<?> createCoach(@Valid @RequestBody CoachDTO coachDTO) {
         CoachDTO dto = service.createCoach(coachDTO);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateCoach(@PathVariable(value = "id") Long id, @RequestBody CoachDTO coachDTO) {
+    public ResponseEntity<?> updateCoach(@PathVariable(value = "id") Long id, @Valid @RequestBody CoachDTO coachDTO) {
         CoachDTO dto = service.updateCoach(id, coachDTO);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
