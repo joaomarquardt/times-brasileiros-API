@@ -1,16 +1,19 @@
 package com.web.spring_clubs.services;
 
-import com.web.spring_clubs.domain.Club;
 import com.web.spring_clubs.domain.Coach;
+import com.web.spring_clubs.dtos.CoachDTO;
+import com.web.spring_clubs.mappers.CoachMapper;
 import com.web.spring_clubs.repositories.CoachRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +31,9 @@ class CoachServiceTest {
     @Mock
     private CoachRepository coachRepository;
 
+    @Spy
+    private CoachMapper mapper = Mappers.getMapper(CoachMapper.class);
+
     @Autowired
     @InjectMocks
     private CoachService coachService;
@@ -44,26 +50,22 @@ class CoachServiceTest {
         // Arrange
         Coach coach1 = new Coach("Treinador1", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_coach1.png", "Ofensivo",
-                "Intensivo", new Club(1L, "Test club1", "Test club1", "RJ",
-                "Rio de Janeiro", LocalDate.now(), "Maracanã", "/images/test_club.png"));
+                "Intensivo", null);
         Coach coach2 = new Coach("Treinador2", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_coach2.png", "Defensivo",
-                "Teórico", new Club(1L, "Test club2", "Test club2", "SP",
-                "São Paulo", LocalDate.now(), "Vila Belmiro", "/images/test_club.png"));
+                "Teórico", null);
         List<Coach> coaches = List.of(coach1, coach2);
         when(coachRepository.findAll()).thenReturn(coaches);
 
         // Act
-        List<Coach> result = coachService.findAll();
+        List<CoachDTO> result = coachService.findAll();
 
         // Assert
         assertAll(
                 () -> assertNotNull(result),
                 () -> assertEquals(coaches.size(), result.size()),
-                () -> assertEquals(coaches.get(0), result.get(0)),
-                () -> assertEquals(coaches.get(1), result.get(1)),
-                () -> assertEquals(coaches.get(0).getId(), result.get(0).getId()),
-                () -> assertEquals(coaches.get(1).getId(), result.get(1).getId())
+                () -> assertEquals(coaches.get(0).getName(), result.get(0).name()),
+                () -> assertEquals(coaches.get(1).getName(), result.get(1).name())
         );
 
         verify(coachRepository, times(1)).findAll();
@@ -75,19 +77,17 @@ class CoachServiceTest {
         // Arrange
         Coach coach = new Coach("Treinador", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
-                "Intensivo", new Club(1L, "Test club", "Test club", "RJ",
-                "Rio de Janeiro", LocalDate.now(), "Maracanã", "/images/test_club.png"));
+                "Intensivo", null);
         coach.setId(1L);
-        when(coachRepository.findById(1L)).thenReturn(Optional.of(coach));
+        when(coachRepository.findById(coach.getId())).thenReturn(Optional.of(coach));
 
         // Act
-        Coach result = coachService.findCoachById(1L);
+        CoachDTO result = coachService.findCoachById(1L);
 
         // Assert
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(coach.getId(), result.getId()),
-                () -> assertEquals(coach.getName(), result.getName())
+                () -> assertEquals(coach.getName(), result.name())
         );
 
         verify(coachRepository, times(1)).findById(coach.getId());
@@ -100,9 +100,9 @@ class CoachServiceTest {
         when(coachRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act and assert
-        assertThrows(EntityNotFoundException.class, () -> {
-            Coach result = coachService.findCoachById(1L);
-        });
+        assertThrows(EntityNotFoundException.class,
+                () -> coachService.findCoachById(1L)
+        );
 
         verify(coachRepository, times(1)).findById(1L);
 
@@ -114,21 +114,49 @@ class CoachServiceTest {
         // Arrange
         Coach coach = new Coach("Treinador", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
-                "Intensivo", new Club(1L, "Test club", "Test club", "RJ",
-                "Rio de Janeiro", LocalDate.now(), "Maracanã", "/images/test_club.png"));
-        coach.setId(1L);
-        when(coachRepository.save(coach)).thenReturn(coach);
+                "Intensivo", null);
+        CoachDTO coachDTO = new CoachDTO("Treinador", 100, "Brasil", LocalDate.now(),
+                LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
+                "Intensivo", null);
+        when(coachRepository.save(any(Coach.class))).thenReturn(coach);
 
         // Act
-        Coach result = coachService.createCoach(coach);
+        CoachDTO result = coachService.createCoach(coachDTO);
 
         // Assert
         assertNotNull(result);
-        assertEquals(coach.getId(), result.getId());
-        assertEquals(coach.getName(), result.getName());
+        assertEquals(coach.getName(), result.name());
 
-        verify(coachRepository, times(1)).save(coach);
+        verify(coachRepository, times(1)).save(any(Coach.class));
 
+    }
+
+    // TODO: createPlayerFailure()
+
+    @Test
+    @DisplayName("Should update and get the updated coach successfully")
+    void updateClubSuccess() {
+        // Arrange
+        Coach currentCoach = new Coach("Treinador", 100, "Brasil", LocalDate.now(),
+                LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
+                "Intensivo", null);
+        String currentName = currentCoach.getName();
+        currentCoach.setId(1L);
+        CoachDTO modifiedCoach = new CoachDTO("Treinador modificado", 100, "Brasil", LocalDate.now(),
+                LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
+                "Intensivo", null);
+        when(coachRepository.findById(anyLong())).thenReturn(Optional.of(currentCoach));
+        when(coachRepository.save(any(Coach.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        CoachDTO result = coachService.updateCoach(currentCoach.getId(), modifiedCoach);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(modifiedCoach.name(), result.name());
+        assertNotEquals(currentName, result.name());
+
+        verify(coachRepository, times(1)).save(any(Coach.class));
     }
 
     // TODO: createCoachFailure()
@@ -137,17 +165,16 @@ class CoachServiceTest {
     @DisplayName("Should throw an exception when trying to update a non-existing coach by ID")
     void updateCoachFailureNotFound() {
         // Arrange
-        Coach coach = new Coach("Treinador", 100, "Brasil", LocalDate.now(),
+        CoachDTO coach = new CoachDTO("Treinador", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
                 "Intensivo", null);
-        coach.setId(1L);
-        when(coachRepository.findById(coach.getId())).thenReturn(Optional.empty());
+        when(coachRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act and assert
         assertThrows(EntityNotFoundException.class,
-                () -> coachService.updateCoach(coach.getId(), coach));
+                () -> coachService.updateCoach(1L, coach));
 
-        verify(coachRepository, times(1)).findById(coach.getId());
+        verify(coachRepository, times(1)).findById(anyLong());
     }
 
     // TODO: updateCoachFailureInvalidData()
@@ -156,16 +183,13 @@ class CoachServiceTest {
     @DisplayName("Should delete a coach successfully")
     void deleteCoachSuccess() {
         // Arrange
-        Coach coach = new Coach("Treinador", 100, "Brasil", LocalDate.now(),
-                LocalDate.now(), 180, 100, "/images/test_coach.png", "Ofensivo",
-                "Intensivo", null);
-        coach.setId(1L);
-        doNothing().when(coachRepository).deleteById(anyLong());
+        Long coachId = 1L;
+        doNothing().when(coachRepository).deleteById(coachId);
 
         // Act
-        coachService.deleteCoach(anyLong());
+        coachService.deleteCoach(coachId);
 
-        verify(coachRepository, times(1)).deleteById(anyLong());
+        verify(coachRepository, times(1)).deleteById(coachId);
     }
 
     // TODO: deleteCoachFailure
