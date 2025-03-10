@@ -6,26 +6,28 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public record CoachDTO(
-        @NotBlank
+        @NotBlank(message = "Must be not blank")
+        @Size(min = 2, max = 100, message = "Must be of 2 - 100 characters")
         String name,
-        @PositiveOrZero
+        @PositiveOrZero(message = "Must be greater than or equal to 0")
         double salary,
         @NotBlank
+        @Size(min = 2, max = 50, message = "Must be of 2 - 50 characters")
         String country,
-        @NotNull
-        @Past
+        @NotNull(message = "Must be not null")
+        @Past(message = "Must be in the past")
         LocalDate bornAt,
-        @NotNull
-        @Past
+        @NotNull(message = "Must be not null")
+        @Past(message = "Must be in the past")
         LocalDate debutAt,
-        @Positive
+        @Positive(message = "Must be greater than 0cm")
         double height,
-        @Positive
+        @Positive(message = "Must be greater than 0kg")
         double weight,
         String photoPath,
-        @NotBlank
+        @NotBlank(message = "Must be not blank")
         String tacticalStyle,
-        @NotBlank
+        @NotBlank(message = "Must be not blank")
         String trainingMethodology,
         Club currentClub
 ) {
