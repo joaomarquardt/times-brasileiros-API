@@ -1,15 +1,19 @@
 package com.web.spring_clubs.services;
 
 import com.web.spring_clubs.domain.Player;
+import com.web.spring_clubs.dtos.PlayerDTO;
+import com.web.spring_clubs.mappers.PlayerMapper;
 import com.web.spring_clubs.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerServiceTest {
     @Mock
     PlayerRepository playerRepository;
+
+    @Spy
+    private PlayerMapper mapper = Mappers.getMapper(PlayerMapper.class);
 
     @Autowired
     @InjectMocks
@@ -47,14 +54,14 @@ class PlayerServiceTest {
         when(playerRepository.findAll()).thenReturn(players);
 
         // Act
-        List<Player> result = playerService.findAll();
+        List<PlayerDTO> result = playerService.findAll();
 
         // Assert
         assertAll(() -> {
             assertNotNull(result);
             assertEquals(players.size(), result.size());
-            assertEquals(players.get(0).getId(), result.get(0).getId());
-            assertEquals(players.get(1).getId(), result.get(1).getId());
+            assertEquals(players.get(0).getName(), result.get(0).name());
+            assertEquals(players.get(1).getName(), result.get(1).name());
         });
 
         verify(playerRepository, times(1)).findAll();
@@ -71,13 +78,12 @@ class PlayerServiceTest {
         when(playerRepository.findById(1L)).thenReturn(Optional.of(player));
 
         // Act
-         Player result = playerService.findPlayerById(1L);
+         PlayerDTO result = playerService.findPlayerById(1L);
 
         // Assert
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(player.getId(), result.getId()),
-                () -> assertEquals(player.getName(), result.getName())
+                () -> assertEquals(player.getName(), result.name())
                 );
 
         verify(playerRepository, times(1)).findById(player.getId());
@@ -103,20 +109,20 @@ class PlayerServiceTest {
         // Arrange
         Player player = new Player("Jogador", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_player.png", "Ofensivo", null);
-        player.setId(1L);
-        when(playerRepository.save(player)).thenReturn(player);
+        PlayerDTO playerDTO = new PlayerDTO("Jogador", 100, "Brasil", LocalDate.now(),
+                LocalDate.now(), 180, 100, "/images/test_player.png", "Ofensivo", null);
+        when(playerRepository.save(any(Player.class))).thenReturn(player);
 
         // Act
-        Player result = playerService.createPlayer(player);
+        PlayerDTO result = playerService.createPlayer(playerDTO);
 
         // Assert
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(player.getId(), result.getId()),
-                () -> assertEquals(player.getName(), result.getName())
+                () -> assertEquals(player.getName(), result.name())
         );
 
-        verify(playerRepository, times(1)).save(player);
+        verify(playerRepository, times(1)).save(any(Player.class));
     }
 
     // TODO: createPlayerFailure()
@@ -128,22 +134,20 @@ class PlayerServiceTest {
                 LocalDate.now(), 180, 100, "/images/test_player.png", "Ofensivo", null);
         currentPlayer.setId(1L);
         String currentName = currentPlayer.getName();
-        Player modifiedPlayer = new Player("Jogador Modificado", 100, "Brasil", LocalDate.now(),
+        PlayerDTO modifiedPlayer = new PlayerDTO("Jogador Modificado", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_player.png", "Ofensivo", null);
-        modifiedPlayer.setId(1L);
-        when(playerRepository.findById(currentPlayer.getId())).thenReturn(Optional.of(currentPlayer));
+        when(playerRepository.findById(anyLong())).thenReturn(Optional.of(currentPlayer));
         when(playerRepository.save(any(Player.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        Player result = playerService.updatePlayer(modifiedPlayer.getId(), modifiedPlayer);
+        PlayerDTO result = playerService.updatePlayer(currentPlayer.getId(), modifiedPlayer);
 
         // Assert
         assertNotNull(result);
-        assertEquals(currentPlayer.getId(), result.getId());
-        assertEquals(modifiedPlayer.getName(), result.getName());
-        assertNotEquals(currentName, result.getName());
+        assertEquals(modifiedPlayer.name(), result.name());
+        assertNotEquals(currentName, result.name());
 
-        verify(playerRepository, times(1)).save(currentPlayer);
+        verify(playerRepository, times(1)).save(any(Player.class));
 
     }
 
@@ -151,16 +155,15 @@ class PlayerServiceTest {
     @DisplayName("Should throw an exception when trying to update a non-existing player by ID")
     void updatePlayerFailureNotFound() {
         // Arrange
-        Player player = new Player("Jogador", 100, "Brasil", LocalDate.now(),
+        PlayerDTO player = new PlayerDTO("Jogador", 100, "Brasil", LocalDate.now(),
                 LocalDate.now(), 180, 100, "/images/test_player.png", "Ofensivo", null);
-        player.setId(1L);
-        when(playerRepository.findById(player.getId())).thenReturn(Optional.empty());
+        when(playerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act and assert
         assertThrows(EntityNotFoundException.class,
-                () -> playerService.updatePlayer(player.getId(), player));
+                () -> playerService.updatePlayer(1L, player));
 
-        verify(playerRepository, times(1)).findById(player.getId());
+        verify(playerRepository, times(1)).findById(anyLong());
     }
 
     // TODO: updatePlayerFailureInvalidData()
