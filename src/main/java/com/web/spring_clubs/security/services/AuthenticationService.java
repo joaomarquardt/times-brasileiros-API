@@ -6,16 +6,12 @@ import com.web.spring_clubs.security.dtos.RegisterDTO;
 import com.web.spring_clubs.security.exceptions.RegisterConflictException;
 import com.web.spring_clubs.security.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthenticationService {
@@ -28,11 +24,15 @@ public class AuthenticationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void login(AuthDTO authDTO) {
+    @Autowired
+    private TokenService tokenService;
+
+    public String login(AuthDTO authDTO) {
         repository.findByUsername(authDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found by username"));
         var usernamePassword = new UsernamePasswordAuthenticationToken(authDTO.username(), authDTO.password());
         try {
-            this.authenticationManager.authenticate(usernamePassword);
+            var auth = this.authenticationManager.authenticate(usernamePassword);
+            return tokenService.generateToken((User) auth.getPrincipal());
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
