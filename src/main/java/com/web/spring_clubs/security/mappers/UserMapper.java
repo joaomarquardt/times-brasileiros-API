@@ -1,18 +1,18 @@
 package com.web.spring_clubs.security.mappers;
 
 import com.web.spring_clubs.security.domain.User;
-import com.web.spring_clubs.security.dtos.UserDTO;
+import com.web.spring_clubs.security.dtos.UserResponseDTO;
 import org.mapstruct.Mapper;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserDTO toDTO(User entity);
+    UserResponseDTO toDTO(User entity);
 
-    User toEntity(UserDTO dto);
+    User toEntity(UserResponseDTO dto);
 
-    List<UserDTO> toDTOList(List<User> entities);
+    List<UserResponseDTO> toDTOList(List<User> entities);
 
-    List<User> toEntityList(List<UserDTO> dtos);
+    List<User> toEntityList(List<UserResponseDTO> dtos);
 }

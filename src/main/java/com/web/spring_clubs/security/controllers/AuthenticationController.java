@@ -1,8 +1,8 @@
 package com.web.spring_clubs.security.controllers;
 
-import com.web.spring_clubs.security.dtos.AuthDTO;
+import com.web.spring_clubs.security.dtos.AuthRequestDTO;
 import com.web.spring_clubs.security.dtos.AuthResponseDTO;
-import com.web.spring_clubs.security.dtos.RegisterDTO;
+import com.web.spring_clubs.security.dtos.RegisterRequestDTO;
 import com.web.spring_clubs.security.services.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,14 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthDTO authDTO) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO authDTO) {
         String token = service.login(authDTO);
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO RegisterDTO) {
-        service.register(RegisterDTO);
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
+        service.register(registerDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

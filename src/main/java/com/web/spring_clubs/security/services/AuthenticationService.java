@@ -1,8 +1,8 @@
 package com.web.spring_clubs.security.services;
 
 import com.web.spring_clubs.security.domain.User;
-import com.web.spring_clubs.security.dtos.AuthDTO;
-import com.web.spring_clubs.security.dtos.RegisterDTO;
+import com.web.spring_clubs.security.dtos.AuthRequestDTO;
+import com.web.spring_clubs.security.dtos.RegisterRequestDTO;
 import com.web.spring_clubs.security.exceptions.RegisterConflictException;
 import com.web.spring_clubs.security.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public String login(AuthDTO authDTO) {
+    public String login(AuthRequestDTO authDTO) {
         repository.findByUsername(authDTO.username()).orElseThrow(() -> new UsernameNotFoundException("User not found by username"));
         var usernamePassword = new UsernamePasswordAuthenticationToken(authDTO.username(), authDTO.password());
         try {
@@ -38,7 +38,7 @@ public class AuthenticationService {
         }
     }
 
-    public void register(RegisterDTO registerDTO) {
+    public void register(RegisterRequestDTO registerDTO) {
         if (repository.findByUsername(registerDTO.username()).isPresent()) {
             throw new RegisterConflictException("Username is already in use");
         }
